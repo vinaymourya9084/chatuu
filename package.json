@@ -1,0 +1,15 @@
+{
+  "name": "chatuu",
+  "version": "1.0.0",
+  "description": "Real-time Chat Web App with Socket.IO, SQLite, and React",
+  "main": "server/src/server.js",
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build && npm --prefix server install",
+    "start": "node server/src/server.js",
+    "server": "npm --prefix server start",
+    "server:dev": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "dev": "npx concurrently \"npm run server:dev\" \"npm run client\""
+  }
+}

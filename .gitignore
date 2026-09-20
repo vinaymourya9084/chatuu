@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build artifacts
+dist/
+client/dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Databases & local uploads
+server/uploads/*
+!server/uploads/.gitkeep
+*.log
+npm-debug.log*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
