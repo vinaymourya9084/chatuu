@@ -24,6 +24,7 @@ initDB();
 
 // Setup Socket.IO
 const io = setupSocket(server);
+app.set('io', io);
 
 // Middleware
 app.use(cors({

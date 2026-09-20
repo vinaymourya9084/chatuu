@@ -86,12 +86,44 @@ export default function App() {
       }
     };
 
+    const handleUserProfileUpdated = ({ user: updatedUser }) => {
+      setConversations(prev =>
+        prev.map(c => {
+          if (c.participant?.id === updatedUser.id) {
+            return {
+              ...c,
+              participant: {
+                ...c.participant,
+                ...updatedUser
+              }
+            };
+          }
+          return c;
+        })
+      );
+
+      setActiveConversation(prev => {
+        if (prev?.participant?.id === updatedUser.id) {
+          return {
+            ...prev,
+            participant: {
+              ...prev.participant,
+              ...updatedUser
+            }
+          };
+        }
+        return prev;
+      });
+    };
+
     socket.on('conversation_updated', handleConversationUpdated);
     socket.on('receive_message', handleReceiveMessage);
+    socket.on('user_profile_updated', handleUserProfileUpdated);
 
     return () => {
       socket.off('conversation_updated', handleConversationUpdated);
       socket.off('receive_message', handleReceiveMessage);
+      socket.off('user_profile_updated', handleUserProfileUpdated);
     };
   }, [socket, activeConversation?.id, user?.id]);
 
@@ -114,7 +146,7 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="h-[100dvh] w-full flex items-center justify-center bg-slate-950 text-white">
         <div className="text-center">
           <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-sm font-semibold tracking-wide text-slate-400">Loading Chatuu...</p>
@@ -128,9 +160,9 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex bg-slate-950 text-slate-100 antialiased font-sans">
+    <div className="fixed inset-0 h-[100dvh] w-full max-h-[100dvh] overflow-hidden flex bg-slate-950 text-slate-100 antialiased font-sans">
       {/* Sidebar View (hidden on mobile if viewing active chat) */}
-      <div className={`h-full ${mobileView === 'chat' ? 'hidden md:flex' : 'flex w-full md:w-auto'}`}>
+      <div className={`h-full ${mobileView === 'chat' ? 'hidden md:flex' : 'flex w-full md:w-80 lg:w-96 shrink-0'}`}>
         <Sidebar
           activeConversation={activeConversation}
           onSelectConversation={handleSelectConversation}
@@ -144,7 +176,7 @@ export default function App() {
       </div>
 
       {/* Active Chat Area (hidden on mobile if in sidebar view) */}
-      <div className={`flex-1 h-full ${mobileView === 'sidebar' ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`flex-1 h-full min-w-0 ${mobileView === 'sidebar' ? 'hidden md:flex' : 'flex'}`}>
         <ChatArea
           conversation={activeConversation}
           onBack={() => setMobileView('sidebar')}

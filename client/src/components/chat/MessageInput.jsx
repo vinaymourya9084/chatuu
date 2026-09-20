@@ -147,17 +147,18 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
   };
 
   return (
-    <div className="p-3 sm:p-4 bg-slate-900 border-t border-slate-800/80 relative">
+    <div className="p-2 sm:p-4 bg-slate-900 border-t border-slate-800/80 relative shrink-0">
       {/* Emoji Picker Popover */}
       {showEmojiPicker && (
-        <div className="absolute bottom-full left-4 mb-2 p-3 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl z-30 animate-fade-in">
+        <div className="absolute bottom-full left-2 right-2 sm:right-auto sm:left-4 mb-2 p-3 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl z-30 animate-fade-in max-w-sm">
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
             <span className="text-xs font-semibold text-slate-300">Quick Reactions & Emojis</span>
             <button
+              type="button"
               onClick={() => setShowEmojiPicker(false)}
               className="p-1 text-slate-400 hover:text-white rounded-lg"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
           <div className="grid grid-cols-6 gap-2">
@@ -166,7 +167,7 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
                 key={i}
                 type="button"
                 onClick={() => addEmoji(emoji)}
-                className="w-9 h-9 flex items-center justify-center text-lg hover:bg-slate-800 rounded-xl transition-transform hover:scale-125"
+                className="w-10 h-10 flex items-center justify-center text-xl hover:bg-slate-800 rounded-xl transition-transform active:scale-125"
               >
                 {emoji}
               </button>
@@ -177,12 +178,12 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
 
       {/* Selected Image Attachment Preview Card */}
       {filePreview && (
-        <div className="mb-3 p-2 bg-slate-800/80 rounded-2xl border border-slate-700 flex items-center justify-between max-w-xs animate-fade-in">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="mb-2 p-2 bg-slate-800/90 rounded-2xl border border-slate-700 flex items-center justify-between max-w-xs animate-fade-in">
+          <div className="flex items-center gap-2.5 min-w-0">
             <img
               src={filePreview}
               alt="attachment preview"
-              className="w-12 h-12 rounded-xl object-cover bg-slate-900 border border-slate-700"
+              className="w-11 h-11 rounded-xl object-cover bg-slate-900 border border-slate-700"
             />
             <div className="min-w-0">
               <p className="text-xs font-semibold text-white truncate">{selectedFile?.name}</p>
@@ -202,7 +203,7 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
       )}
 
       {/* Input Row */}
-      <form onSubmit={handleSend} className="flex items-end gap-2">
+      <form onSubmit={handleSend} className="flex items-end gap-1.5 sm:gap-2">
         {/* Hidden File Input */}
         <input
           type="file"
@@ -217,7 +218,7 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
           type="button"
           onClick={() => fileInputRef.current?.click()}
           title="Attach Photo"
-          className="p-3 text-slate-400 hover:text-brand-400 hover:bg-slate-800/80 rounded-2xl border border-slate-800 transition-all shrink-0 active:scale-95"
+          className="p-2.5 sm:p-3 text-slate-400 hover:text-brand-400 hover:bg-slate-800/80 rounded-2xl border border-slate-800 transition-all shrink-0 active:scale-95"
         >
           <ImageIcon className="w-5 h-5" />
         </button>
@@ -227,7 +228,7 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
           type="button"
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           title="Emojis"
-          className={`p-3 rounded-2xl border border-slate-800 transition-all shrink-0 active:scale-95 ${
+          className={`p-2.5 sm:p-3 rounded-2xl border border-slate-800 transition-all shrink-0 active:scale-95 ${
             showEmojiPicker
               ? 'bg-brand-500/20 text-brand-400 border-brand-500/40'
               : 'text-slate-400 hover:text-amber-400 hover:bg-slate-800/80'
@@ -236,16 +237,16 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
           <Smile className="w-5 h-5" />
         </button>
 
-        {/* Text Area */}
-        <div className="flex-1 bg-slate-800/80 rounded-2xl border border-slate-700/60 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all flex items-center px-3 py-1.5 min-h-[46px]">
+        {/* Text Area (16px base font size on mobile to prevent Safari auto-zoom) */}
+        <div className="flex-1 bg-slate-800/80 rounded-2xl border border-slate-700/60 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all flex items-center px-3 py-1 min-h-[44px]">
           <textarea
             ref={textareaRef}
             rows={1}
             value={content}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            placeholder={filePreview ? 'Add a caption to this photo...' : 'Type a message... (Press Enter to send)'}
-            className="w-full bg-transparent text-white text-sm placeholder-slate-500 focus:outline-none resize-none py-1.5 leading-relaxed max-h-32"
+            placeholder={filePreview ? 'Add a caption...' : 'Type a message...'}
+            className="w-full bg-transparent text-white text-base sm:text-sm placeholder-slate-500 focus:outline-none resize-none py-1.5 leading-relaxed max-h-32"
           />
         </div>
 
@@ -254,7 +255,7 @@ export default function MessageInput({ conversationId, recipientId, onMessageSen
           type="submit"
           disabled={uploading || (!content.trim() && !selectedFile)}
           title="Send message"
-          className="p-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-2xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all flex items-center justify-center shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="p-2.5 sm:p-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-2xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all flex items-center justify-center shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {uploading ? (
             <Loader2 className="w-5 h-5 animate-spin" />

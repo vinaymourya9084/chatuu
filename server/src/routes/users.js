@@ -90,6 +90,14 @@ router.put('/profile', authenticateToken, (req, res) => {
       FROM users WHERE id = ?
     `).get(currentUserId);
 
+    // Broadcast user profile update to all connected sockets
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('user_profile_updated', {
+        user: updatedUser
+      });
+    }
+
     res.json({
       message: 'Profile updated successfully',
       user: updatedUser

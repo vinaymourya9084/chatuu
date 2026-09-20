@@ -32,6 +32,17 @@ export default function ProfileModal({ isOpen, onClose }) {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const fileInputRef = useRef(null);
 
+  // Sync state whenever modal is opened
+  React.useEffect(() => {
+    if (isOpen && user) {
+      setDisplayName(user.display_name || '');
+      setBio(user.bio || '');
+      setStatusText(user.status_text || 'Available');
+      setAvatarUrl(user.avatar_url || '');
+      setSavedSuccess(false);
+    }
+  }, [isOpen, user]);
+
   if (!isOpen || !user) return null;
 
   // Handle uploading avatar image file directly to server

@@ -120,6 +120,11 @@ export function setupSocket(httpServer) {
           UPDATE conversations SET updated_at = ? WHERE id = ?
         `).run(createdAt, conversationId);
 
+        // Fetch latest sender profile to ensure avatar is always up-to-date
+        const sender = db.prepare(`
+          SELECT username, display_name, avatar_url FROM users WHERE id = ?
+        `).get(userId) || socket.user;
+
         const fullMessage = {
           id: messageId,
           conversation_id: conversationId,
@@ -131,9 +136,9 @@ export function setupSocket(httpServer) {
           file_size: fileSize,
           created_at: createdAt,
           is_read: 0,
-          sender_username: socket.user.username,
-          sender_name: socket.user.display_name,
-          sender_avatar: socket.user.avatar_url
+          sender_username: sender.username,
+          sender_name: sender.display_name,
+          sender_avatar: sender.avatar_url
         };
 
         // Broadcast to conversation room
